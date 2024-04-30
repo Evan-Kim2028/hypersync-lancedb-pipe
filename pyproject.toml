@@ -1,7 +1,7 @@
 [project]
 name = "hypersync-lancedb-pipe"
 version = "0.1.0"
-description = "A unified data streaming blockchain pipeline."
+description = "A serverless embedded streaming OLAP data pipeline"
 authors = [{ name = "Evan K", email = "ekcopersonal@gmail.com" }]
 dependencies = [
     "lancedb>=0.6.11",
