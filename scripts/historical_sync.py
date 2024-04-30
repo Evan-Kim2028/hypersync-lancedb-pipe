@@ -6,13 +6,10 @@ import time
 from hypersync import ColumnMapping, DataType, TransactionField, BlockField
 from hypersync_lancedb_pipe.db_manager import Manager
 
-# This script demonstrates how to batch query hypersync blocks and transactions data, store in a parquet sink, and then write to a LanceDB table.
-# This approach leverages the mutable Lance columnar storage format with the writer capabilities of Lancedb to continuously stream a
-
 
 async def historical_blocks_txs_sync():
     """
-    Uses the HypersyncClient to collect blocks and transactions from the Ethereum network. This data is stored in a parquet sink.
+    Uses the HypersyncClient to collect blocks and transactions from the Ethereum network. This data is stored in a parquet sink and written to a local lance database
     """
 
     client = hypersync.HypersyncClient("https://eth.hypersync.xyz")
@@ -63,13 +60,12 @@ async def historical_blocks_txs_sync():
         await client.create_parquet_folder(query, config)
         from_block = current_to_block + 1  # Update from_block for the next batch
 
-        # Write blocks and transactions data into LanceDB tables.
+        # Write blocks and transactions data into lancedb tables.
         blocks_table_name = "blocks"
         txs_table_name = "transactions"
         index: str = "block_number"
 
-        # load the dataframe into a polars dataframe, which is one way to insert data into Lancedb.
-        # This adds analytical transformations flexibility into the pipeline.
+        # load the dataframe into a polars dataframe and insert into lancedb
         blocks_df = pl.read_parquet(
             f"data/{blocks_table_name}.parquet").rename({'number': 'block_number'})
         txs_df = pl.read_parquet(f"data/{txs_table_name}.parquet")

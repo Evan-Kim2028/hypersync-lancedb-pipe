@@ -19,13 +19,12 @@ async def head_blocks_txs_sync():
     db: lancedb.DBConnection = lancedb.connect("blocks")
     table: lancedb.table = db.open_table("blocks")
 
-    # Get the earliest block in the database
-    to_block: int = table.to_polars().select('block_number').sort(
-        by='block_number', descending=False).collect()['block_number'][0]
+    # set to_block and from_block to query the desired block range.
+    to_block: int = await client.get_height()
+    from_block: int = table.to_polars().select('block_number').sort(
+        by='block_number', descending=True).collect()['block_number'][0] - 1
     db_batch_size: int = 10_000  # Define the number of blocks to process per batch
 
-    # get 30 days worth of blocks up to the min block number in the database
-    from_block = to_block - (7200 * 30)
     while from_block < to_block:
         current_to_block = min(from_block + db_batch_size, to_block)
         print(
