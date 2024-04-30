@@ -9,6 +9,9 @@ data inputs, which allows for a more flexible ETL pipeline, allowing polars to b
 Since LanceDB leverages the [Apache Arrow Standard](https://arrow.apache.org/overview/), there is a lot of flexibility to query from ths database - such as querying larger than memory
 datasets with polars lazyframes and a dataframe API, or using an embedded OLAP engine like duckdb for faster speed and SQL API.
 
+### Install with pip
+`pip install hypersync-lancedb-pipe`
+
 ### Getting Started
 1. This repository uses rye to manage dependencies and the virtual environment. To install, refer to this link for instructions [here](https://rye-up.com/guide/installation/). 
 2. Once rye is installed, run `rye sync` to install dependencies and setup the virtual environment, which has a default name of `.venv`. 
