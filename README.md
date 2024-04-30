@@ -14,6 +14,8 @@ datasets with polars lazyframes and a dataframe API, or using an embedded OLAP e
 2. Once rye is installed, run `rye sync` to install dependencies and setup the virtual environment, which has a default name of `.venv`. 
 3. Activate the virtual environment with the command `source .venv/bin/activate`.
 
-
 ### Running the Pipeline
-In the scripts folder, to backfill data from a historical block number, run the `historical_sync.py` file. To update the database to the head of the chain, run `sync_to_head.py`.
+There are some script examples in the `scripts` folder.
+* Run `historical_sync.py` file to backfill data from a historical block number. 
+* Run `head_sync.py` to sync the database to the head of the chain. 
+* Run `backfill_sync.py` to perform a backfill sync from the earliest block number.

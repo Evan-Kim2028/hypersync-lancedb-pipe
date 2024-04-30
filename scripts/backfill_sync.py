@@ -10,7 +10,7 @@ from hypersync_lancedb_pipe.db_manager import Manager
 
 async def head_blocks_txs_sync():
     """
-    Uses the HypersyncClient to collect blocks and transactions from the Ethereum network. This data is stored in a parquet sink.
+    Uses the HypersyncClient to collect blocks and transactions from the Ethereum network. This data is stored in a parquet sink and written to a local lance database
     """
 
     client = hypersync.HypersyncClient("https://eth.hypersync.xyz")
@@ -19,12 +19,13 @@ async def head_blocks_txs_sync():
     db: lancedb.DBConnection = lancedb.connect("blocks")
     table: lancedb.table = db.open_table("blocks")
 
-    # set to_block and from_block to query the desired block range.
-    to_block: int = await client.get_height()
-    from_block: int = table.to_polars().select('block_number').sort(
-        by='block_number', descending=True).collect()['block_number'][0] - 1
+    # Get the earliest block in the database
+    to_block: int = table.to_polars().select('block_number').sort(
+        by='block_number', descending=False).collect()['block_number'][0]
     db_batch_size: int = 10_000  # Define the number of blocks to process per batch
 
+    # get 30 days worth of blocks up to the min block number in the database
+    from_block = to_block - (7200 * 30)
     while from_block < to_block:
         current_to_block = min(from_block + db_batch_size, to_block)
         print(
