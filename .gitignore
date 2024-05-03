@@ -11,5 +11,6 @@ wheels/
 blocks/*
 transactions/*
 data/*
+mempool/*
 .env
 notes.md
