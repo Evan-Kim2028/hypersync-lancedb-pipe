@@ -12,3 +12,4 @@ blocks/*
 transactions/*
 data/*
 .env
+notes.md
